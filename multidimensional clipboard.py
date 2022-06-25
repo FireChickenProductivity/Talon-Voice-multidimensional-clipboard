@@ -122,8 +122,8 @@ def get_stored_mouse_position (filepath):
 		with open (filepath, 'r') as mouse_position_file:
 			line = mouse_position_file.readline()
 			position = line.split(' ')
-			horizontal = position[0]
-			vertical = position[1]
+			horizontal = int(position[0])
+			vertical = int(position[1])
 			return horizontal, vertical
 	except:	
 		raise PositionUnavailableError()

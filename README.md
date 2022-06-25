@@ -18,7 +18,7 @@ Several settings are defined within the multidimensional clipboard settings.talo
   
 The user.multidimensional_clipboard_display_line_length_limit setting determines how much of the first line of each file within the system will get displayed. Setting this to 0 means that there is no limit. 
   
-The user.multidimensional_clipboard_file_size_limit setting determines how big a file in bytes the system is willing to paste. This setting should prevent the command from either loading too much data into memory to perform a single gigantic paste or from needing to take to take multiple pastes to perform the desired task.
+The user.multidimensional_clipboard_file_size_limit setting determines how big a file in bytes the system is willing to paste. This setting should prevent the command from either loading too much data into memory to perform a single gigantic paste or from needing to take to take multiple pastes to perform the desired task. Files that are too big will not have any text displayed in the clipboard display.
   
 The user.multidimensional_clipboard_operation_delay setting determines how long in milliseconds the copying and pasting commands will pause. Increase this if the copying or pasting commands are not working properly on your computer.
 

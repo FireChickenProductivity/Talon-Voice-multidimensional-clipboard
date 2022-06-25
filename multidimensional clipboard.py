@@ -83,7 +83,7 @@ def file_valid_for_multidimensional_clipboard_use (filepath: str):
 	if not os.path.exists(filepath):
 		return False
 	file_size = os.path.getsize(filepath)
-	if file_size == 0 or file_size >= file_size_limit.get():
+	if file_size == 0 or file_size > file_size_limit.get():
 		return False
 	return True
 
@@ -118,14 +118,16 @@ class PositionUnavailableError(Exception):
 	pass
 
 def get_stored_mouse_position (filepath):
-	if not os.path.exists(filepath):
+	try:
+		with open (filepath, 'r') as mouse_position_file:
+			line = mouse_position_file.readline()
+			position = line.split(' ')
+			horizontal = position[0]
+			vertical = position[1]
+			return horizontal, vertical
+	except:	
 		raise PositionUnavailableError()
-	with open (filepath, 'r') as mouse_position_file:
-		line = mouse_position_file.readline()
-		position = line.split(' ')
-		horizontal = position[0]
-		vertical = position[1]
-		return horizontal, vertical
+	
 
 
 def get_display_position_coordinate (coordinate_name):

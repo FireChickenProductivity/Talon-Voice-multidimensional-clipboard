@@ -4,7 +4,7 @@ import os
 mod = Module()
 MULTIDIMENSIONAL_CLIPBOARD_FOLDER = 'multidimensional clipboard data'
 OTHER_DATA_FOLDER = 'other data'
-COMMAND_DIRECTORY = os.path.join (os.getcwd(), 'user', 'multidimensional clipboard')
+COMMAND_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 STORAGE_FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
 				'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'z']
 DISPLAY_POSITION_FILE = os.path.join(COMMAND_DIRECTORY, OTHER_DATA_FOLDER, 'display position.txt')

@@ -3,12 +3,12 @@ The Talon Voice commands defined by this project let the user store the currentl
 
 The user can store the currently selected text within the desired file by dictating:
 
-copy <the Talon phonetic alphabet word for the desired letter>
+copy (the Talon phonetic alphabet word for the desired letter)
 Assuming a standard Talon set up, dictating copy air would store the selected text in the a file, and dictating copy whale would store the selected text in the w file.
 
 The user can paste the text stored within the desired file by dictating:
-  
-paste <the Talon phonetic alphabet word for the desired letter>
+paste (the Talon phonetic alphabet word for the desired letter)
+
 Assuming a standard Talon set up, dictating paste air would paste the text within the a file, and dictating paste whale would store the text within the w file.
 
 The copy line and copy all commands will store the line and entire document respectively in the file associated with the letter denoted at the end of the command. The paste line and paste all commands respectively replace the line and entire document with the text stored in the file associated with the letter denoted at the end of the command. Those pasting commands can alternatively be dictated with the word replace instead of the word paste.

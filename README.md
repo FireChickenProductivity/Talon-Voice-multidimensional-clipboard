@@ -4,6 +4,7 @@ The Talon Voice commands defined by this project let the user store the currentl
 The user can store the currently selected text within the desired file by dictating:
 
 copy (the Talon phonetic alphabet word for the desired letter)
+
 Assuming a standard Talon set up, dictating copy air would store the selected text in the a file, and dictating copy whale would store the selected text in the w file.
 
 The user can paste the text stored within the desired file by dictating:

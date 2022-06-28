@@ -61,7 +61,11 @@ class Actions:
 			gui.hide()
 			actions.sleep('1s')
 			gui.show()
-			
+	def open_multidimensional_clipboard_file(filename: str):
+		'''Opens the desired multidimensional clipboard file'''
+		filepath = compute_multidimensional_clipboard_destination_path(filename)
+		actions.user.edit_text_file(filepath)
+		
 def paste_text (text: str):
 	with clip.revert():
 		clip.set_text(text)

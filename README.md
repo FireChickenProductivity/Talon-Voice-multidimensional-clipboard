@@ -16,6 +16,7 @@ The copy line and copy all commands will store the line and entire document resp
 
 The command “multi clipboard display” toggles the display for those files (The word display is optional). The display can be moved to the current mouse position by dictating “move multi clipboard display” (The word display is optional).
 
+The clipboard files can be opened with open clipboard (the talon phonetic alphabet word for the desired letter)  
   
 Several settings are defined within the multidimensional clipboard settings.talon file:
   

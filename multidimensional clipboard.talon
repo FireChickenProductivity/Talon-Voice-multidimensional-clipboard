@@ -21,3 +21,6 @@ multi clipboard [display]:
 
 move multi clipboard [display]:
 	user.set_multidimensional_clipboard_display_position_to_current_mouse_position()
+
+open [multi] clipboard <user.letter>:
+	user.open_multidimensional_clipboard_file(letter)

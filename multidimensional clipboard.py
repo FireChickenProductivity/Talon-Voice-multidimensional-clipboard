@@ -6,7 +6,7 @@ MULTIDIMENSIONAL_CLIPBOARD_FOLDER = 'multidimensional clipboard data'
 OTHER_DATA_FOLDER = 'other data'
 COMMAND_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
 STORAGE_FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-				'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'z']
+				'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 DISPLAY_POSITION_FILE = os.path.join(COMMAND_DIRECTORY, OTHER_DATA_FOLDER, 'display position.txt')
 
 display_line_length_limit = mod.setting(
@@ -65,7 +65,7 @@ class Actions:
 		'''Opens the desired multidimensional clipboard file'''
 		filepath = compute_multidimensional_clipboard_destination_path(filename)
 		actions.user.edit_text_file(filepath)
-		
+			
 def paste_text (text: str):
 	with clip.revert():
 		clip.set_text(text)

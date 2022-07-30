@@ -1,6 +1,6 @@
-# Talon-Voice-multidimensional-clipboard
 The Talon Voice commands defined by this project let the user store the currently selected text within 1 of 26 files each associated with 1 of the letters of the English alphabet. The user can then paste the text stored within any of those files and can optionally have the contents of the first line of each file displayed.
 
+<h1>Commands</h1>
 The user can store the currently selected text within the desired file by dictating:
 
 copy (the Talon phonetic alphabet word for the desired letter)
@@ -18,6 +18,7 @@ The command “multi clipboard display” toggles the display for those files (T
 
 The clipboard files can be opened with open clipboard (the talon phonetic alphabet word for the desired letter)  
   
+<h1>Settings</h1>
 Several settings are defined within the multidimensional clipboard settings.talon file:
   
 The user.multidimensional_clipboard_display_line_length_limit setting determines how much of the first line of each file within the system will get displayed. Setting this to 0 means that there is no limit. 

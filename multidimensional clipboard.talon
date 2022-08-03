@@ -1,3 +1,6 @@
+mode: command
+and not mode: user.exam_mode
+-
 copy <user.letter>:
 	user.copy_selected_text_into_multidimensional_clipboard(letter)
 copy all <user.letter>:

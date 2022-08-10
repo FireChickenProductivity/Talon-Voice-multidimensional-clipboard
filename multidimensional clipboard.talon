@@ -1,21 +1,21 @@
 mode: command
 and not mode: user.exam_mode
 -
-copy <user.letter>:
+copy (that|this|here) <user.letter>:
 	user.copy_selected_text_into_multidimensional_clipboard(letter)
 copy all <user.letter>:
 	edit.select_all()
 	user.copy_selected_text_into_multidimensional_clipboard(letter)
-copy line <user.letter>:
+copy line (that|this|here) <user.letter>:
 	edit.select_line()
 	user.copy_selected_text_into_multidimensional_clipboard(letter)
 
-paste <user.letter>:
+paste [that|this|here] <user.letter>:
 	user.paste_multidimensional_clipboard_text(letter)
 (paste|replace) all <user.letter>:
 	edit.select_all()
 	user.paste_multidimensional_clipboard_text(letter)
-(paste|replace) line <user.letter>:
+(paste|replace) line [that|this|here] <user.letter>:
 	edit.select_line()
 	user.paste_multidimensional_clipboard_text(letter)
 

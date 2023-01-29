@@ -10,7 +10,7 @@ copy line (that|this|here) <user.letter>:
 	edit.select_line()
 	user.copy_selected_text_into_multidimensional_clipboard(letter)
 
-(paste|pace) [that|this|here] <user.letter>:
+(paste|pace) (that|this|here) <user.letter>:
 	user.paste_multidimensional_clipboard_text(letter)
 (paste|pace|replace) all <user.letter>:
 	edit.select_all()

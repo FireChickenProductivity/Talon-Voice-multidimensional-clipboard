@@ -8,7 +8,8 @@ copy (this or that or here) (the Talon phonetic alphabet word for the desired le
 Assuming a standard Talon set up, dictating copy that air would store the selected text in the a file, and dictating copy whale would store the selected text in the w file.
 
 The user can paste the text stored within the desired file by dictating:
-paste (the Talon phonetic alphabet word for the desired letter)
+
+paste (this or that or here) (the Talon phonetic alphabet word for the desired letter)
 
 Assuming a standard Talon set up, dictating paste air would paste the text within the a file, and dictating paste whale would store the text within the w file.
 

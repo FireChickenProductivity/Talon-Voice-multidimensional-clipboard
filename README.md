@@ -28,3 +28,4 @@ The user.multidimensional_clipboard_file_size_limit setting determines how big a
   
 The user.multidimensional_clipboard_operation_delay setting determines how long in milliseconds the copying and pasting commands will pause. Increase this if the copying or pasting commands are not working properly on your computer.
 
+The user.multidimensional_clipboard_button_mode setting determines if copy and paste buttons should be displayed on the display. Setting this to 1 activates it and setting it to 0 deactivates it. If you want to use this, you might want to reduce the imgui scale so the display can fit on your screen.

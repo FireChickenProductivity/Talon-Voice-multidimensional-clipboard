@@ -30,6 +30,13 @@ clipboard_operation_delay = mod.setting(
 	desc = 'How long in milliseconds the multidimensional clipboard commands will pause to ensure that they do not restore the clipboard too quickly. Increase this if copying or pasting does not work.'
 )
 
+button_mode = mod.setting(
+	'multidimensional_clipboard_button_mode',
+	type = int,
+	default = 0,
+	desc = 'Activates multidimensional clipboard copy and paste buttons on the interface'
+)
+
 @mod.action_class
 class Actions:
 	def update_multidimensional_clipboard (destination_name: str, new_text: str):
@@ -152,7 +159,17 @@ def gui(gui: imgui.GUI):
 	gui.line()
 	for name in STORAGE_FILES:
 		file_line = name + ': ' + get_initial_line_from_multidimensional_clipboard_file(name)
-		gui.text(file_line)
+		if button_mode.get():
+			if gui.button('paste ' + file_line):
+				gui.hide()
+				actions.user.paste_multidimensional_clipboard_text(name)
+				gui.show()
+			if gui.button('copy ' + name):
+				gui.hide()
+				actions.user.copy_selected_text_into_multidimensional_clipboard(name)
+				gui.show()
+		else:
+			gui.text(file_line)
 
 
 		

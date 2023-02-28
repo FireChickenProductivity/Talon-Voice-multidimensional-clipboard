@@ -155,7 +155,11 @@ def get_display_position_coordinate (coordinate_name):
 def gui(gui: imgui.GUI):
 	gui.x = get_display_position_coordinate('horizontal')
 	gui.y = get_display_position_coordinate('vertical')
-	gui.text("Multidimensional Clipboard")
+	if button_mode.get():
+		if gui.button('Close Multidimensional Clipboard'):
+			gui.hide()
+	else:
+		gui.text("Multidimensional Clipboard")
 	gui.line()
 	for name in STORAGE_FILES:
 		file_line = name + ': ' + get_initial_line_from_multidimensional_clipboard_file(name)

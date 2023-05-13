@@ -1,5 +1,5 @@
 mode: command
-and not mode: user.exam_mode
+and not tag: user.exam_mode
 -
 copy (that|this|here) <user.letter>:
 	user.copy_selected_text_into_multidimensional_clipboard(letter)

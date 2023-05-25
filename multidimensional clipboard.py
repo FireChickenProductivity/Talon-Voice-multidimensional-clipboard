@@ -34,8 +34,8 @@ clipboard_operation_delay = mod.setting(
 class Actions:
 	def update_multidimensional_clipboard (destination_name: str, new_text: str):
 		'''Updates the multidimensional clipboard file with the specified name with the new text.'''
-		with open (compute_multidimensional_clipboard_destination_path(destination_name), 'w') as clipboard_file:
-			clipboard_file.write(new_text)
+		with open (compute_multidimensional_clipboard_destination_path(destination_name), 'wb') as clipboard_file:
+			clipboard_file.write(new_text.encode())
 	def copy_selected_text_into_multidimensional_clipboard (destination_name: str):
 		'''Updates the multidimensional clipboard file with the specified name with the selected text.'''
 		selected_text = get_selected_text()
@@ -80,8 +80,8 @@ def get_multidimensional_clipboard_text (target_name: str):
 	filepath = compute_multidimensional_clipboard_destination_path(target_name)
 	if not file_valid_for_multidimensional_clipboard_use(filepath):
 		return ''
-	with open (filepath, 'r') as clipboard_file:
-		return clipboard_file.read()
+	with open (filepath, 'rb') as clipboard_file:
+		return clipboard_file.read().decode()
 
 def file_valid_for_multidimensional_clipboard_use (filepath: str):
 	if not os.path.exists(filepath):
@@ -161,4 +161,3 @@ def update_mouse_storage_file (filepath: str, horizontal, vertical):
 	with open (filepath, 'w') as mouse_position_file:
 		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
 			
-

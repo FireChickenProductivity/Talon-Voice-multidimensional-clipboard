@@ -45,6 +45,11 @@ class Actions:
 		clipboard_text = get_multidimensional_clipboard_text(target_name)
 		if clipboard_text != '':
 			paste_text(clipboard_text)
+	def type_out_multidimensional_clipboard_text (target_name: str):
+		'''Types the text in the specified multidimensional clipboard file'''
+		clipboard_text = get_multidimensional_clipboard_text(target_name)
+		if clipboard_text != '':
+			actions.insert(clipboard_text)
 	def toggle_multidimensional_clipboard_display ():
 		'''Toggles whether or not the multidimensional clipboard is displayed.'''
 		if gui.showing:

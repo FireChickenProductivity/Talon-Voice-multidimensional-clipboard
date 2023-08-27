@@ -19,6 +19,9 @@ copy line (that|this|here) <user.letter>:
 	edit.select_line()
 	user.paste_multidimensional_clipboard_text(letter)
 
+typeout [that] <user.letter>:
+	user.type_out_multidimensional_clipboard_text(letter)
+
 multi clipboard [display]:
 	user.toggle_multidimensional_clipboard_display()
 

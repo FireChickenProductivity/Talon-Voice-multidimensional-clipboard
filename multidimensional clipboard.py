@@ -70,7 +70,21 @@ class Actions:
 		'''Opens the desired multidimensional clipboard file'''
 		filepath = compute_multidimensional_clipboard_destination_path(filename)
 		actions.user.edit_text_file(filepath)
-			
+
+def initialize_clipboard_files ():
+	for file_name in STORAGE_FILES: initialize_clipboard_file(file_name)
+	
+def initialize_clipboard_file (name: str):
+	path = compute_multidimensional_clipboard_destination_path(name)
+	if does_file_need_to_be_initialized(path):
+		create_empty_file(path)
+
+def does_file_need_to_be_initialized (path: str):
+	return not os.path.exists(path)
+
+def create_empty_file(path: str):
+	with open(path, "w") as file: pass
+
 def paste_text (text: str):
 	with clip.revert():
 		clip.set_text(text)
@@ -166,3 +180,7 @@ def update_mouse_storage_file (filepath: str, horizontal, vertical):
 	with open (filepath, 'w') as mouse_position_file:
 		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
 			
+def setup():
+	initialize_clipboard_files()
+
+setup()

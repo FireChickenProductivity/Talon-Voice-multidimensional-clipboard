@@ -1,10 +1,11 @@
-from talon import Module, actions, clip, imgui, ctrl, settings
+from talon import Module, actions, clip, imgui, ctrl, settings, fs
 import os
 
 mod = Module()
 MULTIDIMENSIONAL_CLIPBOARD_FOLDER = 'multidimensional clipboard data'
 OTHER_DATA_FOLDER = 'other data'
 COMMAND_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+STORAGE_DIRECTORY = os.path.join(COMMAND_DIRECTORY, MULTIDIMENSIONAL_CLIPBOARD_FOLDER)
 STORAGE_FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
 				'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 DISPLAY_POSITION_FILE = os.path.join(COMMAND_DIRECTORY, OTHER_DATA_FOLDER, 'display position.txt')
@@ -135,16 +136,47 @@ def should_trim_line (line_text):
 
 def trim_line (line_text):
 	return line_text[:settings.get(display_line_length_limit)]
+
+class ClipboardFileManager:
+	def __init__(self, name: str):
+		self.name = name
+		self.contains_trimmed_text: bool = False
+		self.text = ""
+		self.load()
 	
-def get_initial_line_from_multidimensional_clipboard_file (target_name: str):
-	filepath = compute_multidimensional_clipboard_destination_path(target_name)
-	if not file_valid_for_multidimensional_clipboard_use(filepath):
-		return ''
-	with open (filepath, 'r') as clipboard_file:
-		line_text = clipboard_file.readline()
-		if should_trim_line(line_text):
-			return trim_line(line_text)
-		return line_text
+	def load(self):
+		filepath = compute_multidimensional_clipboard_destination_path(self.name)
+		if not file_valid_for_multidimensional_clipboard_use(filepath):
+			self.text = ''
+			self.contains_trimmed_text = False
+		with open (filepath, 'r') as clipboard_file:
+			line_text = clipboard_file.readline()
+			if should_trim_line(line_text):
+				self.text = trim_line(line_text)
+				self.contains_trimmed_text = True
+			else:
+				self.text = line_text
+				self.contains_trimmed_text = False
+	
+	def get_text(self):
+		return self.text
+
+class ClipboardFileManagerCollection:
+	def __init__(self):
+		self.managers = {}
+		for name in STORAGE_FILES:
+			self.managers[name] = ClipboardFileManager(name)
+		
+	def get_text(self, name: str) -> str:
+		return self.managers[name].get_text()
+	
+	def reload(self, name: str):
+		self.managers[name].load()
+
+clipboard_file_manager_collection = ClipboardFileManagerCollection()
+def reload_clipboard_file(name, flags):
+	global clipboard_file_manager_collection
+	clipboard_file_manager_collection.reload(name[-5])
 
 class PositionUnavailableError(Exception):
 	pass
@@ -179,18 +211,20 @@ def gui(gui: imgui.GUI):
 	gui.text("Multidimensional Clipboard")
 	gui.line()
 	for name in STORAGE_FILES:
-		file_line = name + ': ' + get_initial_line_from_multidimensional_clipboard_file(name)
+		file_line = name + ': ' + clipboard_file_manager_collection.get_text(name)
 		gui.text(file_line)
-
-
 		
 def update_mouse_storage_file (filepath: str, horizontal, vertical):
 	'''Stores the specified mouse position in the specified file.'''
 	with open (filepath, 'w') as mouse_position_file:
 		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
-			
+
+def reload_clipboard_file_when_storage_directory_file_changes():
+	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)
+
 def setup():
 	initialize_clipboard_files()
 	initialize_display_position_file()
+	reload_clipboard_file_when_storage_directory_file_changes()
 
 setup()

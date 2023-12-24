@@ -79,6 +79,10 @@ def initialize_clipboard_file (name: str):
 	if does_file_need_to_be_initialized(path):
 		create_empty_file(path)
 
+def initialize_display_position_file ():
+	if does_file_need_to_be_initialized(DISPLAY_POSITION_FILE):
+		update_mouse_storage_file(DISPLAY_POSITION_FILE, 0, 0)
+
 def does_file_need_to_be_initialized (path: str):
 	return not os.path.exists(path)
 
@@ -182,5 +186,6 @@ def update_mouse_storage_file (filepath: str, horizontal, vertical):
 			
 def setup():
 	initialize_clipboard_files()
-
+	initialize_display_position_file()
+	
 setup()

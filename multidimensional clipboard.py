@@ -125,7 +125,6 @@ def get_selected_text():
 	return result
 
 def should_trim_line (line_text):
-	# return display_line_length_limit.get() != 0 and display_line_length_limit.get() > len(line_text)
 	return len(line_text) > display_line_length_limit.get() and display_line_length_limit.get() != 0
 
 def trim_line (line_text):
@@ -187,5 +186,5 @@ def update_mouse_storage_file (filepath: str, horizontal, vertical):
 def setup():
 	initialize_clipboard_files()
 	initialize_display_position_file()
-	
+
 setup()

@@ -228,17 +228,36 @@ def get_stored_mouse_position (filepath):
 	except:	
 		raise PositionUnavailableError()
 	
+class PositionFileManager:
+	def __init__(self, path: str):
+		self.path = path
+		self.load()
+	
+	def load(self):
+		try:
+			horizontal, vertical = get_stored_mouse_position(self.path)
+		except PositionUnavailableError:
+			horizontal = 0
+			vertical = 0
+		self.horizontal = int(horizontal)
+		self.vertical = int(vertical)
+	
+	def get_horizontal(self) -> int:
+		return self.horizontal
 
+	def get_vertical(self) -> int:
+		return self.vertical
+	
+	def get_path(self) -> str:
+		return self.path
+
+position_file_manager = PositionFileManager(DISPLAY_POSITION_FILE)
 
 def get_display_position_coordinate (coordinate_name):
-	try:
-		horizontal, vertical = get_stored_mouse_position(DISPLAY_POSITION_FILE)
-		if coordinate_name == 'horizontal':
-			return int(horizontal)
-		elif coordinate_name == 'vertical':
-			return int(vertical)
-	except PositionUnavailableError:
-		return 0
+	if coordinate_name == 'horizontal':
+		return position_file_manager.get_horizontal()
+	elif coordinate_name == 'vertical':
+		return position_file_manager.get_vertical()
 
 @imgui.open(x = get_display_position_coordinate('horizontal'), y = get_display_position_coordinate('vertical'))
 def gui(gui: imgui.GUI):
@@ -254,6 +273,7 @@ def update_mouse_storage_file (filepath: str, horizontal, vertical):
 	'''Stores the specified mouse position in the specified file.'''
 	with open (filepath, 'w') as mouse_position_file:
 		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
+	position_file_manager.load()
 
 def reload_clipboard_file_when_storage_directory_file_changes():
 	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)

@@ -22,7 +22,11 @@ The copy line (this or that or here) and copy all commands will store the line a
 The command “multi clipboard display” toggles the display for those files (The word display is optional). The display can be moved to the current mouse position by dictating “move multi clipboard display” (The word display is optional).
 
 The clipboard files can be opened with open clipboard (the talon phonetic alphabet word for the desired letter)  
-  
+
+If using cursorless, the user can copy the text at a cursorless target into the clipboard system by dictating: 
+
+copy (the Talon phonetic alphabet word for the desired letter) (target or at) (cursorless target). The word "that" can be optionally said after copy.
+
 <h1>Settings</h1>
 Several settings are defined within the multidimensional clipboard settings.talon file:
   

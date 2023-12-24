@@ -23,7 +23,7 @@ The command “multi clipboard display” toggles the display for those files (T
 
 The clipboard files can be opened with open clipboard (the talon phonetic alphabet word for the desired letter)  
 
-If using cursorless, the user can copy the text at a cursorless target into the clipboard system: 
+If using cursorless, the user can copy the text at a cursorless target into the clipboard system by dictating: 
 
 copy (the Talon phonetic alphabet word for the desired letter) (target or at) (cursorless target). The word "that" can be optionally said after copy.
 

@@ -1,4 +1,4 @@
-from talon import Module, actions, clip, imgui, ctrl
+from talon import Module, actions, clip, imgui, ctrl, settings
 import os
 
 mod = Module()
@@ -9,22 +9,28 @@ STORAGE_FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 				'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 DISPLAY_POSITION_FILE = os.path.join(COMMAND_DIRECTORY, OTHER_DATA_FOLDER, 'display position.txt')
 
-display_line_length_limit = mod.setting(
-	'multidimensional_clipboard_display_line_length_limit',
+display_line_length_limit_setting_name = 'multidimensional_clipboard_display_line_length_limit'
+display_line_length_limit = 'user.' + display_line_length_limit_setting_name
+mod.setting(
+	display_line_length_limit_setting_name,
 	type = int,
 	default = 60,
 	desc = 'The limit for how characters the multidimensional clipboard display will show for each line. 0 means no limit'
 )
 
-file_size_limit = mod.setting(
-	'multidimensional_clipboard_file_size_limit',
+file_size_limit_setting_name = 'multidimensional_clipboard_file_size_limit'
+file_size_limit = 'user.' + file_size_limit_setting_name
+mod.setting(
+	file_size_limit_setting_name,
 	type = int,
 	default = 1073741824,
 	desc = 'The multidimensional clipboard system will not attempt to paste the contents of any of its text files if its size in bytes exceeds this number.'
 )
 
-clipboard_operation_delay = mod.setting(
-	'multidimensional_clipboard_operation_delay',
+clipboard_operation_delay_setting_name = 'multidimensional_clipboard_operation_delay'
+clipboard_operation_delay = 'user.' + clipboard_operation_delay_setting_name
+mod.setting(
+	clipboard_operation_delay_setting_name,
 	type = int,
 	default = 150,
 	desc = 'How long in milliseconds the multidimensional clipboard commands will pause to ensure that they do not restore the clipboard too quickly. Increase this if copying or pasting does not work.'
@@ -96,7 +102,7 @@ def paste_text (text: str):
 		wait_long_enough_to_let_clipboard_revert_properly()
 
 def wait_long_enough_to_let_clipboard_revert_properly():
-	actions.sleep(f'{clipboard_operation_delay.get()}ms')
+	actions.sleep(f'{settings.get(clipboard_operation_delay)}ms')
 	
 
 def get_multidimensional_clipboard_text (target_name: str):
@@ -110,7 +116,7 @@ def file_valid_for_multidimensional_clipboard_use (filepath: str):
 	if not os.path.exists(filepath):
 		return False
 	file_size = os.path.getsize(filepath)
-	if file_size == 0 or file_size > file_size_limit.get():
+	if file_size == 0 or file_size > settings.get(file_size_limit):
 		return False
 	return True
 
@@ -125,10 +131,10 @@ def get_selected_text():
 	return result
 
 def should_trim_line (line_text):
-	return len(line_text) > display_line_length_limit.get() and display_line_length_limit.get() != 0
+	return len(line_text) > settings.get(display_line_length_limit) and settings.get(display_line_length_limit) != 0
 
 def trim_line (line_text):
-	return line_text[:display_line_length_limit.get()]
+	return line_text[:settings.get(display_line_length_limit)]
 	
 def get_initial_line_from_multidimensional_clipboard_file (target_name: str):
 	filepath = compute_multidimensional_clipboard_destination_path(target_name)

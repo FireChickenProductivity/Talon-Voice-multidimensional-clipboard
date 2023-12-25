@@ -1,4 +1,4 @@
-from talon import Module, actions, clip, imgui, ctrl, settings, fs
+from talon import Module, actions, clip, imgui, ctrl, settings, fs, app
 import os
 
 mod = Module()
@@ -173,7 +173,7 @@ class ClipboardFileManagerCollection:
 	def _get_manager(self, name: str) -> ClipboardFileManager:
 		return self.managers[name]
 
-clipboard_file_manager_collection = ClipboardFileManagerCollection()
+clipboard_file_manager_collection: ClipboardFileManagerCollection = None
 def reload_clipboard_file(name, flags):
 	global clipboard_file_manager_collection
 	clipboard_file_manager_collection.reload(name[-5])
@@ -243,8 +243,10 @@ def reload_clipboard_file_when_storage_directory_file_changes ():
 	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)
 
 def setup ():
+	global clipboard_file_manager_collection
+	clipboard_file_manager_collection = ClipboardFileManagerCollection()
 	initialize_clipboard_files()
 	initialize_display_position_file()
 	reload_clipboard_file_when_storage_directory_file_changes()
 
-setup()
+app.register("ready", setup)

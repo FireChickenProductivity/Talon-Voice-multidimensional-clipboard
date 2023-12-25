@@ -1,4 +1,5 @@
 from talon import Module, actions, clip, imgui, ctrl, settings, fs, app
+from typing import List
 import os
 
 mod = Module()
@@ -40,31 +41,31 @@ mod.setting(
 
 @mod.action_class
 class Actions:
-	def update_multidimensional_clipboard (destination_name: str, new_text: str):
+	def update_multidimensional_clipboard(destination_name: str, new_text: str):
 		'''Updates the multidimensional clipboard file with the specified name with the new text.'''
-		with open (compute_multidimensional_clipboard_destination_path(destination_name), 'wb') as clipboard_file:
+		with open(compute_multidimensional_clipboard_destination_path(destination_name), 'wb') as clipboard_file:
 			clipboard_file.write(new_text.encode())
-	def copy_selected_text_into_multidimensional_clipboard (destination_name: str):
+	def copy_selected_text_into_multidimensional_clipboard(destination_name: str):
 		'''Updates the multidimensional clipboard file with the specified name with the selected text.'''
 		selected_text = get_selected_text()
 		actions.user.update_multidimensional_clipboard(destination_name, selected_text)
-	def paste_multidimensional_clipboard_text (target_name: str):
+	def paste_multidimensional_clipboard_text(target_name: str):
 		'''Pastes the text in the specified multidimensional clipboard file.'''
 		clipboard_text = get_multidimensional_clipboard_text(target_name)
 		if clipboard_text != '':
 			paste_text(clipboard_text)
-	def type_out_multidimensional_clipboard_text (target_name: str):
+	def type_out_multidimensional_clipboard_text(target_name: str):
 		'''Types the text in the specified multidimensional clipboard file'''
 		clipboard_text = get_multidimensional_clipboard_text(target_name)
 		if clipboard_text != '':
 			actions.insert(clipboard_text)
-	def toggle_multidimensional_clipboard_display ():
+	def toggle_multidimensional_clipboard_display():
 		'''Toggles whether or not the multidimensional clipboard is displayed.'''
 		if gui.showing:
 			gui.hide()
 		else:
 			gui.show()
-	def set_multidimensional_clipboard_display_position_to_current_mouse_position ():
+	def set_multidimensional_clipboard_display_position_to_current_mouse_position():
 		'''Sets the display position of themultidimensional clipboard display to the current mouse position.'''
 		horizontal, vertical = ctrl.mouse_pos() 
 		update_mouse_storage_file(DISPLAY_POSITION_FILE, horizontal, vertical)
@@ -79,36 +80,36 @@ class Actions:
 		filepath = compute_multidimensional_clipboard_destination_path(filename)
 		actions.user.edit_text_file(filepath)
 
-def initialize_clipboard_files ():
+def initialize_clipboard_files():
 	initialize_clipboard_directory()
 	for file_name in STORAGE_FILES: initialize_clipboard_file(file_name)
 	
-def initialize_clipboard_directory ():
+def initialize_clipboard_directory():
 	create_directory_if_nonexistent(STORAGE_DIRECTORY)
 
-def initialize_other_data_directory ():
+def initialize_other_data_directory():
 	create_directory_if_nonexistent(OTHER_DATA_DIRECTORY)
 
-def create_directory_if_nonexistent (path: str):
+def create_directory_if_nonexistent(path: str):
 	if not os.path.exists(path):
 		os.mkdir(path)
 
-def initialize_clipboard_file (name: str):
+def initialize_clipboard_file(name: str):
 	path = compute_multidimensional_clipboard_destination_path(name)
 	if does_file_need_to_be_initialized(path):
 		create_empty_file(path)
 
-def initialize_display_position_file ():
+def initialize_display_position_file():
 	if does_file_need_to_be_initialized(DISPLAY_POSITION_FILE):
 		update_mouse_storage_file(DISPLAY_POSITION_FILE, 0, 0)
 
-def does_file_need_to_be_initialized (path: str):
+def does_file_need_to_be_initialized(path: str):
 	return not os.path.exists(path)
 
 def create_empty_file(path: str):
 	with open(path, "w") as file: pass
 
-def paste_text (text: str):
+def paste_text(text: str):
 	with clip.revert():
 		clip.set_text(text)
 		actions.edit.paste()
@@ -117,14 +118,14 @@ def paste_text (text: str):
 def wait_long_enough_to_let_clipboard_revert_properly():
 	actions.sleep(f'{settings.get(clipboard_operation_delay)}ms')
 	
-def get_multidimensional_clipboard_text (target_name: str):
+def get_multidimensional_clipboard_text(target_name: str):
 	filepath = compute_multidimensional_clipboard_destination_path(target_name)
 	if not file_valid_for_multidimensional_clipboard_use(filepath):
 		return ''
-	with open (filepath, 'rb') as clipboard_file:
+	with open(filepath, 'rb') as clipboard_file:
 		return clipboard_file.read().decode()
 
-def file_valid_for_multidimensional_clipboard_use (filepath: str):
+def file_valid_for_multidimensional_clipboard_use(filepath: str):
 	if not os.path.exists(filepath):
 		return False
 	file_size = os.path.getsize(filepath)
@@ -132,7 +133,7 @@ def file_valid_for_multidimensional_clipboard_use (filepath: str):
 		return False
 	return True
 
-def compute_multidimensional_clipboard_destination_path (destination_name: str):
+def compute_multidimensional_clipboard_destination_path(destination_name: str):
 	return os.path.join(COMMAND_DIRECTORY, MULTIDIMENSIONAL_CLIPBOARD_FOLDER, destination_name + '.txt')
 
 def get_selected_text():
@@ -142,10 +143,10 @@ def get_selected_text():
 		result = clip.text()
 	return result
 
-def should_trim_line (line_text):
+def should_trim_line(line_text):
 	return len(line_text) > settings.get(display_line_length_limit) and settings.get(display_line_length_limit) != 0
 
-def trim_line (line_text):
+def trim_line(line_text):
 	return line_text[:settings.get(display_line_length_limit)]
 
 class ClipboardFileManager:
@@ -158,7 +159,7 @@ class ClipboardFileManager:
 		filepath = compute_multidimensional_clipboard_destination_path(self.name)
 		if not file_valid_for_multidimensional_clipboard_use(filepath):
 			self.text = ''
-		with open (filepath, 'r') as clipboard_file:
+		with open(filepath, 'r') as clipboard_file:
 			line_text = clipboard_file.readline()
 			if should_trim_line(line_text):
 				self.text = trim_line(line_text)
@@ -177,6 +178,10 @@ class ClipboardFileManagerCollection:
 	def get_text(self, name: str) -> str:
 		manager = self._get_manager(name)
 		return manager.get_display_text()
+
+	def reload_all(self):
+		for manager in self._get_managers(): manager.load()
+		print('reloading all')
 	
 	def reload(self, name: str):
 		manager = self._get_manager(name)
@@ -184,6 +189,9 @@ class ClipboardFileManagerCollection:
 
 	def _get_manager(self, name: str) -> ClipboardFileManager:
 		return self.managers[name]
+
+	def _get_managers(self) -> List[ClipboardFileManager]:
+		return [self.managers[name] for name in self.managers.keys()]
 
 clipboard_file_manager_collection: ClipboardFileManagerCollection = None
 def reload_clipboard_file(name, flags):
@@ -193,9 +201,9 @@ def reload_clipboard_file(name, flags):
 class PositionUnavailableError(Exception):
 	pass
 
-def get_stored_mouse_position (filepath):
+def get_stored_mouse_position(filepath):
 	try:
-		with open (filepath, 'r') as mouse_position_file:
+		with open(filepath, 'r') as mouse_position_file:
 			line = mouse_position_file.readline()
 			position = line.split(' ')
 			horizontal = int(position[0])
@@ -229,14 +237,14 @@ class PositionFileManager:
 
 position_file_manager = PositionFileManager(DISPLAY_POSITION_FILE)
 
-def get_display_position_coordinate (coordinate_name):
+def get_display_position_coordinate(coordinate_name):
 	if coordinate_name == 'horizontal':
 		return position_file_manager.get_horizontal()
 	elif coordinate_name == 'vertical':
 		return position_file_manager.get_vertical()
 
 @imgui.open(x = get_display_position_coordinate('horizontal'), y = get_display_position_coordinate('vertical'))
-def gui (gui: imgui.GUI):
+def gui(gui: imgui.GUI):
 	gui.x = get_display_position_coordinate('horizontal')
 	gui.y = get_display_position_coordinate('vertical')
 	gui.text("Multidimensional Clipboard")
@@ -245,21 +253,25 @@ def gui (gui: imgui.GUI):
 		file_line = name + ': ' + clipboard_file_manager_collection.get_text(name)
 		gui.text(file_line)
 		
-def update_mouse_storage_file (filepath: str, horizontal, vertical):
+def update_mouse_storage_file(filepath: str, horizontal, vertical):
 	'''Stores the specified mouse position in the specified file.'''
-	with open (filepath, 'w') as mouse_position_file:
+	with open(filepath, 'w') as mouse_position_file:
 		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
 	position_file_manager.load()
 
-def reload_clipboard_file_when_storage_directory_file_changes ():
+def reload_clipboard_file_when_storage_directory_file_changes():
 	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)
 
-def setup ():
+def reload_clipboard_files_when_relevant_setting_changes():
+	settings.register(display_line_length_limit, lambda x: clipboard_file_manager_collection.reload_all())
+
+def setup():
 	initialize_clipboard_files()
 	initialize_other_data_directory()
 	initialize_display_position_file()
 	global clipboard_file_manager_collection
 	clipboard_file_manager_collection = ClipboardFileManagerCollection()
 	reload_clipboard_file_when_storage_directory_file_changes()
+	reload_clipboard_files_when_relevant_setting_changes()
 
 app.register("ready", setup)

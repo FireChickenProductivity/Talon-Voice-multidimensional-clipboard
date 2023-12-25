@@ -19,15 +19,6 @@ mod.setting(
 	desc = 'The limit for how characters the multidimensional clipboard display will show for each line. 0 means no limit'
 )
 
-text_buffer_limit_setting_name = 'multidimensional_clipboard_text_buffer_limit'
-text_buffer_limit = 'user.' + text_buffer_limit_setting_name
-mod.setting(
-	text_buffer_limit_setting_name,
-	type = int,
-	default = 100,
-	desc = 'The limit for how many characters to keep in active memory to avoid having to reload the clipboard text from the file with the multidimensional clipboard'
-)
-
 file_size_limit_setting_name = 'multidimensional_clipboard_file_size_limit'
 file_size_limit = 'user.' + file_size_limit_setting_name
 mod.setting(
@@ -114,11 +105,7 @@ def paste_text (text: str):
 def wait_long_enough_to_let_clipboard_revert_properly():
 	actions.sleep(f'{settings.get(clipboard_operation_delay)}ms')
 	
-
 def get_multidimensional_clipboard_text (target_name: str):
-	if clipboard_file_manager_collection.does_manager_contain_entire_file(target_name):
-		return clipboard_file_manager_collection.get_buffer_text(target_name)
-		
 	filepath = compute_multidimensional_clipboard_destination_path(target_name)
 	if not file_valid_for_multidimensional_clipboard_use(filepath):
 		return ''
@@ -152,37 +139,22 @@ def trim_line (line_text):
 class ClipboardFileManager:
 	def __init__(self, name: str):
 		self.name = name
-		self.contains_trimmed_text: bool = False
 		self.display_text = ""
-		self.buffer_text = ""
 		self.load()
 	
 	def load(self):
 		filepath = compute_multidimensional_clipboard_destination_path(self.name)
 		if not file_valid_for_multidimensional_clipboard_use(filepath):
 			self.text = ''
-			self.buffer_text = ""
-			self.contains_trimmed_text = False
 		with open (filepath, 'r') as clipboard_file:
 			line_text = clipboard_file.readline()
 			if should_trim_line(line_text):
 				self.text = trim_line(line_text)
 			else:
 				self.text = line_text
-		with open (filepath, 'r') as clipboard_file:
-			self.buffer_text = clipboard_file.read(settings.get(text_buffer_limit) + 1)
-			self.contains_trimmed_text = len(self.buffer_text) > settings.get(text_buffer_limit)
-			if self.contains_trimmed_text: self.buffer_text = None
 	
 	def get_display_text(self) -> str:
 		return self.text
-
-	def get_buffer_text(self) -> str:
-		print(self.buffer_text, len(self.buffer_text))
-		return self.buffer_text
-	
-	def contains_entire_file(self) -> bool:
-		return not self.contains_trimmed_text
 
 class ClipboardFileManagerCollection:
 	def __init__(self):
@@ -193,15 +165,7 @@ class ClipboardFileManagerCollection:
 	def get_text(self, name: str) -> str:
 		manager = self._get_manager(name)
 		return manager.get_display_text()
-
-	def get_buffer_text(self, name: str) -> str:
-		manager = self._get_manager(name)
-		return manager.get_buffer_text()
 	
-	def does_manager_contain_entire_file(self, name: str) -> bool:
-		manager = self._get_manager(name)
-		return manager.contains_entire_file()
-
 	def reload(self, name: str):
 		manager = self._get_manager(name)
 		manager.load()
@@ -260,7 +224,7 @@ def get_display_position_coordinate (coordinate_name):
 		return position_file_manager.get_vertical()
 
 @imgui.open(x = get_display_position_coordinate('horizontal'), y = get_display_position_coordinate('vertical'))
-def gui(gui: imgui.GUI):
+def gui (gui: imgui.GUI):
 	gui.x = get_display_position_coordinate('horizontal')
 	gui.y = get_display_position_coordinate('vertical')
 	gui.text("Multidimensional Clipboard")
@@ -275,10 +239,10 @@ def update_mouse_storage_file (filepath: str, horizontal, vertical):
 		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
 	position_file_manager.load()
 
-def reload_clipboard_file_when_storage_directory_file_changes():
+def reload_clipboard_file_when_storage_directory_file_changes ():
 	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)
 
-def setup():
+def setup ():
 	initialize_clipboard_files()
 	initialize_display_position_file()
 	reload_clipboard_file_when_storage_directory_file_changes()

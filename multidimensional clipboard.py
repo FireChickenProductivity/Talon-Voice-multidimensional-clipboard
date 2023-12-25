@@ -64,6 +64,7 @@ class Actions:
 		if gui.showing:
 			gui.hide()
 		else:
+			clipboard_file_manager_collection.reload_all()
 			gui.show()
 	def set_multidimensional_clipboard_display_position_to_current_mouse_position():
 		'''Sets the display position of themultidimensional clipboard display to the current mouse position.'''
@@ -152,8 +153,7 @@ def trim_line(line_text):
 class ClipboardFileManager:
 	def __init__(self, name: str):
 		self.name = name
-		self.display_text = ""
-		self.load()
+		self.text = ""
 	
 	def load(self):
 		filepath = compute_multidimensional_clipboard_destination_path(self.name)
@@ -181,7 +181,6 @@ class ClipboardFileManagerCollection:
 
 	def reload_all(self):
 		for manager in self._get_managers(): manager.load()
-		print('reloading all')
 	
 	def reload(self, name: str):
 		manager = self._get_manager(name)
@@ -195,8 +194,9 @@ class ClipboardFileManagerCollection:
 
 clipboard_file_manager_collection: ClipboardFileManagerCollection = None
 def reload_clipboard_file(name, flags):
-	global clipboard_file_manager_collection
-	clipboard_file_manager_collection.reload(name[-5])
+	if gui.showing:
+		global clipboard_file_manager_collection
+		clipboard_file_manager_collection.reload(name[-5])
 
 class PositionUnavailableError(Exception):
 	pass
@@ -263,7 +263,11 @@ def reload_clipboard_file_when_storage_directory_file_changes():
 	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)
 
 def reload_clipboard_files_when_relevant_setting_changes():
-	settings.register(display_line_length_limit, lambda x: clipboard_file_manager_collection.reload_all())
+	settings.register(display_line_length_limit, lambda x: handle_display_line_length_limit_change())
+
+def handle_display_line_length_limit_change():
+	if gui.showing: 
+		clipboard_file_manager_collection.reload_all()
 
 def setup():
 	initialize_clipboard_files()

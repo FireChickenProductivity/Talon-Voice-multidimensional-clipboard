@@ -45,20 +45,34 @@ class Actions:
 		'''Updates the multidimensional clipboard file with the specified name with the new text.'''
 		with open(compute_multidimensional_clipboard_destination_path(destination_name), 'wb') as clipboard_file:
 			clipboard_file.write(new_text.encode())
+			
 	def copy_selected_text_into_multidimensional_clipboard(destination_name: str):
 		'''Updates the multidimensional clipboard file with the specified name with the selected text.'''
 		selected_text = get_selected_text()
 		actions.user.update_multidimensional_clipboard(destination_name, selected_text)
+		
 	def paste_multidimensional_clipboard_text(target_name: str):
 		'''Pastes the text in the specified multidimensional clipboard file.'''
 		clipboard_text = get_multidimensional_clipboard_text(target_name)
 		if clipboard_text != '':
 			paste_text(clipboard_text)
+
+	def get_multidimensional_clipboard_text(target_name: str) -> str:
+		'''Returns the text in the specified multidimensional clipboard file.'''
+		return get_multidimensional_clipboard_text(target_name)
+
+	def get_multidimensional_clipboard_display_text(target_name: str) -> str:
+		'''Returns the display text for the specified multidimensional clipboard file.'''
+		text = get_multidimensional_clipboard_text(target_name)
+		if should_trim_line(text): text = trim_line(text)
+		return text
+			
 	def type_out_multidimensional_clipboard_text(target_name: str):
 		'''Types the text in the specified multidimensional clipboard file'''
 		clipboard_text = get_multidimensional_clipboard_text(target_name)
 		if clipboard_text != '':
 			actions.insert(clipboard_text)
+			
 	def toggle_multidimensional_clipboard_display():
 		'''Toggles whether or not the multidimensional clipboard is displayed.'''
 		if gui.showing:
@@ -66,6 +80,7 @@ class Actions:
 		else:
 			clipboard_file_manager_collection.reload_all()
 			gui.show()
+			
 	def set_multidimensional_clipboard_display_position_to_current_mouse_position():
 		'''Sets the display position of themultidimensional clipboard display to the current mouse position.'''
 		horizontal, vertical = ctrl.mouse_pos() 
@@ -76,10 +91,12 @@ class Actions:
 			gui.hide()
 			actions.sleep('1s')
 			gui.show()
+			
 	def open_multidimensional_clipboard_file(filename: str):
 		'''Opens the desired multidimensional clipboard file'''
 		filepath = compute_multidimensional_clipboard_destination_path(filename)
 		actions.user.edit_text_file(filepath)
+		
 
 def initialize_clipboard_files():
 	initialize_clipboard_directory()

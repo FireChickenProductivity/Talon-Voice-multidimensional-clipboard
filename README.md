@@ -36,3 +36,17 @@ The user.multidimensional_clipboard_file_size_limit setting determines how big a
   
 The user.multidimensional_clipboard_operation_delay setting determines how long in milliseconds the copying and pasting commands will pause. Increase this if the copying or pasting commands are not working properly on your computer.
 
+<h1>Actions</h1>
+Several actions are provided to make it easier to build custom commands for working with the clipboard system:
+
+user.get_multidimensional_clipboard_text(clipboard_letter)
+
+Returns the text stored in the clipboard file referred to by the letter passed to it.
+
+user.get_multidimensional_clipboard_display_text(clipboard_letter)
+
+Returns the display text for the clipboard file referred to by the letter passed to it.
+
+update_multidimensional_clipboard(clipboard_letter, new_text)
+
+Stores the new_text in the clipboard file referred to by the clipboard_letter.

@@ -5,6 +5,7 @@ mod = Module()
 MULTIDIMENSIONAL_CLIPBOARD_FOLDER = 'multidimensional clipboard data'
 OTHER_DATA_FOLDER = 'other data'
 COMMAND_DIRECTORY = os.path.dirname(os.path.realpath(__file__))
+OTHER_DATA_DIRECTORY = os.path.join(COMMAND_DIRECTORY, OTHER_DATA_FOLDER)
 STORAGE_DIRECTORY = os.path.join(COMMAND_DIRECTORY, MULTIDIMENSIONAL_CLIPBOARD_FOLDER)
 STORAGE_FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
 				'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -79,8 +80,19 @@ class Actions:
 		actions.user.edit_text_file(filepath)
 
 def initialize_clipboard_files ():
+	initialize_clipboard_directory()
 	for file_name in STORAGE_FILES: initialize_clipboard_file(file_name)
 	
+def initialize_clipboard_directory ():
+	create_directory_if_nonexistent(STORAGE_DIRECTORY)
+
+def initialize_other_data_directory ():
+	create_directory_if_nonexistent(OTHER_DATA_DIRECTORY)
+
+def create_directory_if_nonexistent (path: str):
+	if not os.path.exists(path):
+		os.mkdir(path)
+
 def initialize_clipboard_file (name: str):
 	path = compute_multidimensional_clipboard_destination_path(name)
 	if does_file_need_to_be_initialized(path):
@@ -243,10 +255,11 @@ def reload_clipboard_file_when_storage_directory_file_changes ():
 	fs.watch(STORAGE_DIRECTORY, reload_clipboard_file)
 
 def setup ():
+	initialize_clipboard_files()
+	initialize_other_data_directory()
+	initialize_display_position_file()
 	global clipboard_file_manager_collection
 	clipboard_file_manager_collection = ClipboardFileManagerCollection()
-	initialize_clipboard_files()
-	initialize_display_position_file()
 	reload_clipboard_file_when_storage_directory_file_changes()
 
 app.register("ready", setup)

@@ -63,8 +63,7 @@ class Actions:
 
 	def get_multidimensional_clipboard_display_text(target_name: str) -> str:
 		'''Returns the display text for the specified multidimensional clipboard file.'''
-		text = get_multidimensional_clipboard_text(target_name)
-		if should_trim_line(text): text = trim_line(text)
+		text = get_display_text(target_name)
 		return text
 			
 	def type_out_multidimensional_clipboard_text(target_name: str):
@@ -173,18 +172,22 @@ class ClipboardFileManager:
 		self.text = ""
 	
 	def load(self):
-		filepath = compute_multidimensional_clipboard_destination_path(self.name)
-		if not file_valid_for_multidimensional_clipboard_use(filepath):
-			self.text = ''
-		with open(filepath, 'r') as clipboard_file:
-			line_text = clipboard_file.readline()
-			if should_trim_line(line_text):
-				self.text = trim_line(line_text)
-			else:
-				self.text = line_text
+		self.text = get_display_text(self.name)
 	
 	def get_display_text(self) -> str:
 		return self.text
+
+def get_display_text(clip_board_file_name: str) -> str:
+	filepath = compute_multidimensional_clipboard_destination_path(clip_board_file_name)
+	if not file_valid_for_multidimensional_clipboard_use(filepath):
+		return ''
+	with open(filepath, 'r') as clipboard_file:
+		line_text = clipboard_file.readline()
+		if should_trim_line(line_text):
+			text = trim_line(line_text)
+		else:
+			text = line_text
+	return text
 
 class ClipboardFileManagerCollection:
 	def __init__(self):

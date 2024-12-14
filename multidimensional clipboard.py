@@ -272,11 +272,14 @@ def gui(gui: imgui.GUI):
 	for name in STORAGE_FILES:
 		file_line = name + ': ' + clipboard_file_manager_collection.get_text(name)
 		gui.text(file_line)
-		
+
+def _format_coordinate(coordinate):
+	return str(int(coordinate))
+
 def update_mouse_storage_file(filepath: str, horizontal, vertical):
 	'''Stores the specified mouse position in the specified file.'''
 	with open(filepath, 'w') as mouse_position_file:
-		mouse_position_file.write(str(horizontal) + ' ' + str(vertical))
+		mouse_position_file.write(_format_coordinate(horizontal) + ' ' + _format_coordinate(vertical))
 	position_file_manager.load()
 
 def reload_clipboard_file_when_storage_directory_file_changes():

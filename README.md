@@ -50,3 +50,6 @@ Returns the display text for the clipboard file referred to by the letter passed
 update_multidimensional_clipboard(clipboard_letter, new_text)
 
 Stores the new_text in the clipboard file referred to by the clipboard_letter.
+
+# Alternatives
+[Clippy](https://github.com/AndreasArvidsson/clippy) is a sophisticated standalone application clipboard manager with talon commands for it.
